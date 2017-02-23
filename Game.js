@@ -3,8 +3,12 @@
 /*jshint esversion: 6 */
 /* globals createjs */
 /* globals Tetrominoe */
+/* globals IntroScreen */
+/* globals GameScreen */
+/* globals InstructionScreen */
 /* globals AssetManager */
 /* globals MoverDirection */
+/* globals manifest */
 
 (function () {
     "use strict";
