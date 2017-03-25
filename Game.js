@@ -1,7 +1,7 @@
+/* globals createjs */
 /*jshint browser:true */
 /*jshint devel:true */
 /*jshint esversion: 6 */
-/* globals createjs */
 /* globals Tetrominoe */
 /* globals IntroScreen */
 /* globals GameScreen */
@@ -23,10 +23,16 @@
     var frameRate = 24;
     // game objects
     var assetManager = null;
-    var tetro = null;
+
+    var introScreen = null;
+    var background = null;
+    //var tetro = null;
+    /************** Play Button Setup **************/
+    //var btnPlay;
+    //var btnInstructions;
 
     //key booleans
-    var downKey = false,
+    /*var downKey = false,
         upKey = false,
         leftKey = false,
         rightKey = false,
@@ -44,7 +50,7 @@
 
         var selected = pieceBag.splice(Math.floor(Math.random() * pieceBag.length), 1)[0];
         return new Tetrominoe(stage, assetManager, selected); // remove a single piece
-    }
+    }*/
 
     // ------------------------------------------------------------ event handlers
     function onInit() {
@@ -55,6 +61,8 @@
         // set canvas to as wide/high as the browser window
         canvas.width = 600;
         canvas.height = 600;
+        canvas.style.backgroundColor = "#000000";
+
         // create stage object
         stage = new createjs.Stage(canvas);
 
@@ -70,8 +78,16 @@
         console.log(">> adding sprites to game");
         stage.removeEventListener("onAllAssetsLoaded", onSetup);
 
+        background = assetManager.getSprite("assets");
+        background.gotoAndStop("title");
+        stage.addChild(background);
+
+        introScreen = new IntroScreen(assetManager, stage);
+        //introScreen.showMe();
+        //gameScreen = new GameScreen(assetManager, stage);
+
         //initialize keys, no keys pressed
-        downKey = false;
+        /*downKey = false;
         upKey = false;
         leftKey = false;
         rightKey = false;
@@ -80,20 +96,21 @@
         tetro = nextPiece();
         //setup event listeners for keyboard
         document.addEventListener("keyup", onKeyUp);
-        document.addEventListener("keydown", onKeyDown);
+        document.addEventListener("keydown", onKeyDown);*/
 
         // startup the ticker
         createjs.Ticker.setFPS(frameRate);
         createjs.Ticker.addEventListener("tick", onTick);
 
+        stage.addEventListener("introFinished", onIntroFinished);
         console.log(">> game ready");
     }
 
-    var oldTetros = [];
+    //var oldTetros = [];
 
     function onTick(e) {
         // TESTING FPS
-        document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
+        /*document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
 
         if (leftKey) {
             tetro.changeColumn(MoverDirection.LEFT);
@@ -118,28 +135,21 @@
         } else {
             oldTetros.push(tetro);
             tetro = nextPiece();
-        }
+        }*/
 
         // update the stage!
         stage.update();
     }
 
-    function onKeyDown(e) {
-        var speed = 2;
-        if (e.keyCode == 37) leftKey = true;
-        else if (e.keyCode == 39) rightKey = true;
-        else if (e.keyCode == 38) upKey = true;
-        else if (e.keyCode == 40) downKey = true;
-        else if (e.keyCode == 32) spaceKey = true;
-
-    }
-
-    function onKeyUp(e) {
-        if (e.keyCode == 37) leftKey = false;
-        else if (e.keyCode == 39) rightKey = false;
-        else if (e.keyCode == 38) upKey = false;
-        else if (e.keyCode == 40) downKey = false;
-        else if (e.keyCode == 32) spaceKey = false;
+    function onIntroFinished(e) {
+        console.log("on intro finished called");
+        /*if (e.buttonNumber === 1) {
+            introScreen.hideMe();
+            contentScreen.showMe();
+        } else if (e.buttonNumber === 2) {
+            introScreen.hideMe();
+            instructionScreen.showMe();
+        }*/
     }
 
 })();

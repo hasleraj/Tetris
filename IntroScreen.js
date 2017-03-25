@@ -7,6 +7,10 @@ var IntroScreen = function (assetManager, stage) {
     //CustomEvent
     var eventScreenComplete = new CustomEvent("introFinished");
 
+    var background = assetManager.getSprite("assets");
+    background.gotoAndStop("title");
+    screen.addChild(background);
+
     //construct container object
     var screen = new createjs.Container();
 
@@ -18,16 +22,7 @@ var IntroScreen = function (assetManager, stage) {
     btnPlay.y = 240;
     btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "btnPlayUp", "btnPlayDown", "btnPlayDown", false, hitAreaSprite, "hitArea");
     screen.addChild(btnPlay);
-    btnPlay.addEventListener("click", onClick);
-
-    //add instruction button
-    var btnInstruction = assetManager.getSprite("uiAssets");
-    btnInstruction.gotoAndStop("btnInstructionUp");
-    btnInstruction.x = 120;
-    btnInstruction.y = 240;
-    btnInstruction.buttonHelper = new createjs.ButtonHelper(btnInstruction, "btnInstructionUp", "btnInstructionDown", "btnInstructionDown", false, hitAreaSprite, "hitArea");
-    screen.addChild(btnInstruction);
-    btnInstruction.addEventListener("click", onClick);
+    btnPlay.addEventListener("click", onClickPlay);
 
 
     //------------------------------public methods
@@ -40,7 +35,15 @@ var IntroScreen = function (assetManager, stage) {
     };
 
     //-----------------------------event handlers
-    function onClick(e) {
+
+    function onClickPlay(e) {
+        console.log("called onclick play");
+        /*eventScreenComplete.buttonNumber = 1;
+        stage.dispatchEvent(eventScreenComplete);*/
+    }
+
+    function onClickInstruction(e) {
+        eventScreenComplete.buttonNumber = 2;
         stage.dispatchEvent(eventScreenComplete);
     }
 
