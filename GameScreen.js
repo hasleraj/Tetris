@@ -48,7 +48,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
         introScreen = myIntroScreen;
 
-        var tetro = nextPiece();
+        tetro = nextPiece();
 
         // startup the ticker
         createjs.Ticker.setFPS(frameRate);
@@ -59,6 +59,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     };
     this.showMe = function () {
+        this.onSetup();
         stage.addChild(screen);
     };
 
