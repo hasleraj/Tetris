@@ -10,20 +10,21 @@ var InstructionScreen = function (assetManager, stage) {
     //construct container object
     var screen = new createjs.Container();
 
-    var hitAreaSprite = assetManager.getSprite("uiAssets");
+    /*var hitAreaSprite = assetManager.getSprite("assets");
     //add play button
-    var btnBack = assetManager.getSprite("uiAssets");
+    var btnBack = assetManager.getSprite("assets");
     btnBack.gotoAndStop("btnBackUp");
     btnBack.x = 120;
     btnBack.y = 240;
     btnBack.buttonHelper = new createjs.ButtonHelper(btnBack, "btnBackUp", "btnBackDown", "btnBackDown", false, hitAreaSprite, "hitArea");
     screen.addChild(btnBack);
-    btnBack.addEventListener("click", onClick);
+    btnBack.addEventListener("click", onClick);*/
 
 
     //------------------------------public methods
     this.showMe = function () {
         stage.addChild(screen);
+        console.log("instructions");
     };
 
     this.hideMe = function () {
