@@ -38,6 +38,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         }
 
         var selected = pieceBag.splice(Math.floor(Math.random() * pieceBag.length), 1)[0];
+
         return new Tetrominoe(stage, assetManager, selected); // remove a single piece
     }
 
