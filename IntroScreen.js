@@ -18,10 +18,10 @@ var IntroScreen = function (assetManager, stage) {
 
     //add play button
     var btnPlay = assetManager.getSprite("assets");
-    btnPlay.gotoAndStop("btnPlayUp");
+    btnPlay.gotoAndStop("btnMenuUp");
     btnPlay.x = 190;
     btnPlay.y = 240;
-    btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "btnPlayUp", "btnPlayDown", "btnPlayDown", false);
+    btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "btnMenuUp", "btnMenuDown", "btnMenuDown", false);
     screen.addChild(btnPlay);
     btnPlay.addEventListener("click", onClickPlay);
 
