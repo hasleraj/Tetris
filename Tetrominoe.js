@@ -43,7 +43,8 @@ var Tetrominoe = function (stage, assetManager, assetName) {
 
     //called if user hits space button to drop piece
     this.dropMe = function () {
-        sprite.y = 600;
+        var spriteHeight = sprite.getBounds().height;
+        sprite.y = 600 - (spriteHeight/2);
     };
 
     // moves the sprite one column to the left or right based on key input

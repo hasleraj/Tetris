@@ -13,7 +13,7 @@ var IntroScreen = function (assetManager, stage) {
     /************** Background Setup **************/
     var background = assetManager.getSprite("assets");
     background.gotoAndStop("title");
-    background.x = 50;
+    background.x = 100;
     background.y = 130;
     screen.addChild(background);
 
