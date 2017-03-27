@@ -24,10 +24,10 @@
     // game objects
     var assetManager = null;
 
-    var introScreen = null;
-    var contentScreen = null;
-    var instructionScreen = null;
-    var background = null;
+    var introScreen = null,
+        contentScreen = null,
+        instructionScreen = null,
+        background = null;
 
     // ------------------------------------------------------------ event handlers
     function onInit() {
@@ -65,12 +65,14 @@
         createjs.Ticker.addEventListener("tick", onTick);
 
         stage.addEventListener("introFinished", onIntroFinished);
+        stage.addEventListener("instructionsFinished", onInstructionsFinished);
+        stage.addEventListener("contentFinished", onContentFinished);
+        
         console.log(">> game ready");
     }
 
 
     function onTick(e) {
-
         // update the stage!
         stage.update();
     }
@@ -83,6 +85,23 @@
             introScreen.hideMe();
             instructionScreen.showMe();
         }
+    }
+    
+    function onInstructionsFinished(e) {
+        if (e.buttonNumber === 0) {
+            introScreen.showMe();
+            instructionScreen.hideMe();
+        }
+    }
+    
+    function onContentFinished(e) {
+        /*if (e.buttonNumber === 1) {
+            introScreen.hideMe();
+            contentScreen.showMe();
+        } else if (e.buttonNumber === 2) {
+            introScreen.hideMe();
+            instructionScreen.showMe();
+        }*/
     }
 
 })();

@@ -20,11 +20,11 @@ var Tetrominoe = function (stage, assetManager, assetName) {
 
     var spriteMover = new Mover(sprite, stage);
 
-    var spriteHeight = sprite.getBounds().height;
-    console.log(spriteHeight)
+    var spriteHeight = sprite.getBounds();
+    console.log(spriteHeight.height)
     this.updateMe = function () {
         //collision test with walls
-        if (sprite.x < 0 /* left bound */ || sprite.x > 600 /* right */ || sprite.y < 0 /* top */ || sprite.y > 600 - (spriteHeight/2) /* bottom */ ) {
+        if (sprite.x < 0 /* left bound */ || sprite.x > 600 /* right */ || sprite.y < 0 /* top */ || sprite.y > 600 /* bottom */ ) {
             this.landMe();
         } else {
             spriteMover.update();

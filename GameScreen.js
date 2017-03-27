@@ -9,7 +9,7 @@
 var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     //CustomEvent
-    var eventScreenComplete = new CustomEvent("instructionsFinished");
+    var eventScreenComplete = new CustomEvent("contentFinished");
 
     //construct container object
     var screen = new createjs.Container();
@@ -30,7 +30,19 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     var pieceBag = [];
     var oldTetros = [];
+    
+    //add play button
+    var btnPlayAgain = assetManager.getSprite("assets");
+    btnPlayAgain.gotoAndStop("btnPlayUp");
+    btnPlayAgain.x = 350;
+    btnPlayAgain.y = 240;
+    btnPlayAgain.buttonHelper = new createjs.ButtonHelper(btnPlayAgain, "btnResetUp", "btnResetDown", "btnResetDown", false);
+    screen.addChild(btnPlayAgain);
+    btnPlayAgain.addEventListener("click", onClickPlayAgain);
 
+    
+    //------------------------------private methods
+    
     function nextPiece() {
         if (pieceBag.length === 0) {
             //28 pieces in the tetrominoe bag
@@ -83,7 +95,6 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         } else if (downKey) {
             tetro.changeRow(MoverDirection.DOWN);
             downKey = false;
-            //tetro.startMe(MoverDirection.DOWN);
         } else if (spaceKey) {
             tetro.dropMe();
             spaceKey = false;
@@ -96,11 +107,9 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
             tetro = nextPiece();
         }
     }
+    
+    function onClickPlayAgain(e) {
 
-    function onStartGame(e) {}
-
-    function onClick(e) {
-        stage.dispatchEvent(eventScreenComplete);
     }
 
     function onKeyDown(e) {
