@@ -29,7 +29,7 @@
         instructionScreen = null,
         background = null;
 
-    // ------------------------------------------------------------ event handlers
+    /************** Event Handlers **************/
     function onInit() {
         console.log(">> initializing");
         // get reference to canvas

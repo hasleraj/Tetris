@@ -12,7 +12,7 @@ var Mover = function (sprite, stage) {
     // sprite not animating on construction
     sprite.stop();
 
-    // --------------------------------------------------- get/set methods
+    /************** Get/Set Methods **************/
     this.setSpeed = function (value) {
         speed = value;
     };
@@ -28,7 +28,7 @@ var Mover = function (sprite, stage) {
         return moving;
     };
 
-    // --------------------------------------------------- public methods
+    /************** Public methods **************/
     this.startMe = function () {
         sprite.play();
         moving = true;

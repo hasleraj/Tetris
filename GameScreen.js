@@ -8,7 +8,6 @@
 /* globals MoverDirection*/
 var GameScreen = function (assetManager, stage, myIntroScreen) {
 
-    //CustomEvent
     var eventScreenComplete = new CustomEvent("contentFinished");
 
     //construct container object
@@ -31,7 +30,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     var pieceBag = [];
     var oldTetros = [];
     
-    //add play button
+    /************** Play Again Button Setup **************/
     var btnPlayAgain = assetManager.getSprite("assets");
     btnPlayAgain.gotoAndStop("btnPlayUp");
     btnPlayAgain.x = 350;
@@ -41,7 +40,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     btnPlayAgain.addEventListener("click", onClickPlayAgain);
 
     
-    //------------------------------private methods
+    /************** Private Methods **************/
     
     function nextPiece() {
         if (pieceBag.length === 0) {
@@ -54,7 +53,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         return new Tetrominoe(stage, assetManager, selected); // remove a single piece
     }
 
-    //------------------------------public methods
+    /************** Public Methods **************/
 
     this.onSetup = function () {
 
@@ -66,9 +65,6 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         createjs.Ticker.setFPS(frameRate);
         createjs.Ticker.addEventListener("tick", onTick);
 
-        // setup event listener to start game
-        document.addEventListener("click", onStartGame);
-
     };
     this.showMe = function () {
         this.onSetup();
@@ -79,7 +75,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         stage.removeChild(screen);
     };
 
-    //-----------------------------event handlers
+    /************** Event Handlers **************/
     function onTick(e) {
         document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
 

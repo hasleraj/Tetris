@@ -10,13 +10,14 @@ var IntroScreen = function (assetManager, stage) {
     //construct container object
     var screen = new createjs.Container();
 
+    /************** Background Setup **************/
     var background = assetManager.getSprite("assets");
     background.gotoAndStop("title");
     background.x = 50;
     background.y = 130;
     screen.addChild(background);
 
-    //add play button
+    /************** Play Button Setup **************/
     var btnPlay = assetManager.getSprite("assets");
     btnPlay.gotoAndStop("btnPlayUp");
     btnPlay.x = 190;
@@ -25,6 +26,7 @@ var IntroScreen = function (assetManager, stage) {
     screen.addChild(btnPlay);
     btnPlay.addEventListener("click", onClickPlay);
 
+    /************** Instruction Button Setup **************/
     var btnInstruction = assetManager.getSprite("assets");
     btnInstruction.gotoAndStop("btnPlayUp");
     btnInstruction.x = 130;
@@ -34,7 +36,7 @@ var IntroScreen = function (assetManager, stage) {
     btnInstruction.addEventListener("click", onClickInstruction);
 
 
-    //------------------------------public methods
+    /************** Public Methods **************/
     this.showMe = function () {
         stage.addChild(screen);
     };
@@ -43,7 +45,7 @@ var IntroScreen = function (assetManager, stage) {
         stage.removeChild(screen);
     };
 
-    //-----------------------------event handlers
+    /************** Event Handlers **************/
 
     function onClickPlay(e) {
         eventScreenComplete.buttonNumber = 1;

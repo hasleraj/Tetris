@@ -10,8 +10,7 @@ var InstructionScreen = function (assetManager, stage) {
     //construct container object
     var screen = new createjs.Container();
 
-    var hitAreaSprite = assetManager.getSprite("assets");
-    //add play button
+    /************** Back Button Setup **************/
     var btnBack = assetManager.getSprite("assets");
     btnBack.gotoAndStop("btnMenuUp");
     btnBack.x = 190;
@@ -21,7 +20,7 @@ var InstructionScreen = function (assetManager, stage) {
     btnBack.addEventListener("click", onClickMain);
 
 
-    //------------------------------public methods
+    /************** Public Methods **************/
     this.showMe = function () {
         stage.addChild(screen);
     };
@@ -30,8 +29,7 @@ var InstructionScreen = function (assetManager, stage) {
         stage.removeChild(screen);
     };
 
-    //-----------------------------event handlers
-    
+    /************** Event Handelrs **************/
     function onClickMain(e) {
         eventScreenComplete.buttonNumber = 0;
         stage.dispatchEvent(eventScreenComplete);
