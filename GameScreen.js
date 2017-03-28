@@ -29,7 +29,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     var pieceBag = [];
     var oldTetros = [];
-    
+
     /************** Play Again Button Setup **************/
     var btnPlayAgain = assetManager.getSprite("assets");
     btnPlayAgain.gotoAndStop("btnPlayUp");
@@ -37,11 +37,11 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     btnPlayAgain.y = 240;
     btnPlayAgain.buttonHelper = new createjs.ButtonHelper(btnPlayAgain, "btnResetUp", "btnResetDown", "btnResetDown", false);
     screen.addChild(btnPlayAgain);
-    btnPlayAgain.addEventListener("click", onClickPlayAgain);
+    btnPlayAgain.addEventListener("click", onReset);
 
-    
+
     /************** Private Methods **************/
-    
+
     function nextPiece() {
         if (pieceBag.length === 0) {
             //28 pieces in the tetrominoe bag
@@ -50,7 +50,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
         var selected = pieceBag.splice(Math.floor(Math.random() * pieceBag.length), 1)[0];
 
-        return new Tetrominoe(stage, assetManager, selected); // remove a single piece
+        return new Tetrominoe(stage, assetManager, selected); //remove a single piece
     }
 
     /************** Public Methods **************/
@@ -103,9 +103,10 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
             tetro = nextPiece();
         }
     }
-    
-    function onClickPlayAgain(e) {
 
+    function onReset(e) {
+        oldTetros = [];
+        pieceBag = [];
     }
 
     function onKeyDown(e) {

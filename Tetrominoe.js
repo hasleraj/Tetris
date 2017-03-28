@@ -19,12 +19,12 @@ var Tetrominoe = function (stage, assetManager, assetName) {
     stage.addChild(sprite);
 
     var spriteMover = new Mover(sprite, stage);
-    
+
     /************** Public Methods **************/
     this.updateMe = function () {
         var spriteHeight = sprite.getBounds().height;
         //collision test with walls
-        if (sprite.x < 0 /* left bound */ || sprite.x > 600 /* right */ || sprite.y < 0 /* top */ || sprite.y > 600 - (spriteHeight/2) /* bottom */ ) {
+        if (sprite.x < 0 /* left bound */ || sprite.x > 600 /* right */ || sprite.y < 0 /* top */ || sprite.y > 600 - (spriteHeight / 2) /* bottom */ ) {
             this.landMe();
         } else {
             spriteMover.update();
@@ -44,7 +44,7 @@ var Tetrominoe = function (stage, assetManager, assetName) {
     //called if user hits space button to drop piece
     this.dropMe = function () {
         var spriteHeight = sprite.getBounds().height;
-        sprite.y = 600 - (spriteHeight/2);
+        sprite.y = 600 - (spriteHeight / 2);
     };
 
     // moves the sprite one column to the left or right based on key input
