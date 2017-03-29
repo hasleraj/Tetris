@@ -3,7 +3,7 @@
 /*jshint esversion: 6 */
 /* globals Mover */
 /* globals MoverDirection */
-var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
+var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
     "use strict";
     //placement 
     const START_X = 200;
@@ -14,33 +14,58 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
     //number of ticks before movement is forced
     const TICKS_PER_MOVE = 24;
 
+    var screenX, screenY; // set to startx and starty in reset me
+
     var currentTicks = 0;
 
     var sprite = null;
     var active = false;
-    var spriteName = assetName;
+    var type = tetroType;
 
     var grid = gameGrid; // reference to the main grid.
 
     //start top middle
-    var grid_x = Math.round(grid.length / 2);
-    var grid_y = grid[0].length - 2; // Minus two to allow some room
+    // Set to top middle of grid (5, 18) in resetMe;
+    var grid_x, grid_y;
 
     var rotation = 0; // current number of rotations resets to 0 if it would hit 4
 
-    sprite = assetManager.getSprite("assets");
-    sprite.gotoAndStop(assetName);
-    stage.addChild(sprite);
+    //sprite = assetManager.getSprite("assets");
+    //sprite.gotoAndStop(tetroType);
+    //stage.addChild(sprite);
+
+    var sprites = [];
+    for(var i = 0; i < 4; i++) {
+        var s = assetManager.getSprite("assets");
+        s.gotoAndStop(getColor());
+        stage.addChild(s);
+        sprites.push(s);
+    }
+
 
     /************** Private Methods **************/
 
-    // This returns the grid positions of each block in tetro if it existed at the given location with the given rotation
-    function getGridPlacement(gridX, gridY, rotationAngle) {
+    function getColor() {
+        switch (type) {
+        case 'J': return 'purple';  // J
+        case 'O': return 'red';     // O
+        case 'T': return 'orange';  // T
+        case 'L': return 'yellow';  // L
+        case 'S': return 'pink';    // S
+        case 'Z': return 'green';   // Z
+        case 'I': return 'blue';    // I
+        default:
+            console.error('unknown piece');
+            return 'green';
+        }
+    }
+
+    function getBlocks(rotationAngle) {
         var blocks;
 
         // these are the normal co-ordinates of unrotated blocks
-        switch (spriteName) {
-        case 'tetroOne':
+        switch (type) {
+        case 'J':
             blocks = [{
                 x: 0,
                 y: 0
@@ -55,7 +80,7 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
                 y: -1
             }];
             break; // J
-        case 'tetroTwo':
+        case 'O':
             blocks = [{
                 x: 0,
                 y: 0
@@ -70,7 +95,7 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
                 y: -1
             }];
             break; // O
-        case 'tetroThree':
+        case 'T':
             blocks = [{
                 x: 1,
                 y: 0
@@ -85,7 +110,7 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
                 y: 1
             }];
             break; // T
-        case 'tetroFour':
+        case 'L':
             blocks = [{
                 x: 0,
                 y: 0
@@ -100,7 +125,7 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
                 y: -1
             }];
             break; // L
-        case 'tetroFive':
+        case 'S':
             blocks = [{
                 x: 0,
                 y: 0
@@ -115,7 +140,7 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
                 y: -1
             }];
             break; // S
-        case 'tetroSix':
+        case 'Z':
             blocks = [{
                 x: 0,
                 y: 0
@@ -130,7 +155,7 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
                 y: -1
             }];
             break; // Z
-        case 'tetroSeven':
+        case 'I':
             blocks = [{
                 x: 0,
                 y: 0
@@ -151,7 +176,7 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
         }
 
         // Square should never be transformed because it doesn't rotate around one of it's blocks
-        if (spriteName != 'tetroTwo') {
+        if (type != 'O') {
             // we need to change them depending on rotation
             // The formula is:
             // [x1, y1] = [xcosθ - ysinθ, xsinθ + ycosθ];
@@ -172,6 +197,13 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
                 blocks[b] = rotated;
             }
         }
+
+        return blocks;
+    }
+
+    // This returns the grid positions of each block in tetro if it existed at the given location with the given rotation
+    function getGridPlacement(gridX, gridY, rotationAngle) {
+        var blocks = getBlocks(rotationAngle);
 
         // Now the blocks are set in relation to the tetro's origin point
         // We need to offset them based on the gridX and gridY
@@ -196,10 +228,12 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
                 block.x >= grid.length ||
                 block.y < 0 ||
                 block.y >= grid[block.x].length ||
-                grid[block.x][block.y] === true) {
+                grid[block.x][block.y] !== null) {
                 valid = false;
             }
         });
+
+        //console.log('new position ' + valid + '\n' + JSON.stringify(blocks))
 
         return valid;
     }
@@ -224,9 +258,9 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
 
         // Sets the blocks in the main grid to true for the spots where the tetros blocks are.
         var blocks = getGridPlacement(grid_x, grid_y, rotation * 90);
-        blocks.forEach(function (block) {
-            grid[block.x][block.y] = true;
-        });
+        sprites.forEach(function(s, i) {
+            grid[blocks[i].x][blocks[i].y] = s;
+        })
 
         // Stop any future action
         active = false;
@@ -272,7 +306,7 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
 
     this.canRotate = function () {
         //inactive tetro can never move, squares don't rotate
-        if (!active || spriteName == 'tetroTwo') {
+        if (!active || type == 'O') {
             return false;
         }
 
@@ -287,10 +321,14 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
         }
 
         if (direction == MoverDirection.LEFT) {
-            sprite.x -= COLUMN_WIDTH;
+            screenX -= COLUMN_WIDTH;
+            setSprites();
+
             grid_x--;
         } else if (direction == MoverDirection.RIGHT) {
-            sprite.x += COLUMN_WIDTH;
+            screenX += COLUMN_WIDTH;
+            setSprites();
+
             grid_x++;
         }
     };
@@ -298,16 +336,28 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
     //moves the sprite down one column at a time if user is pushing down arrow
     this.changeRow = function (direction) {
         if (!this.canMove(direction)) {
-            console.log('cant move down');
             this.landMe();
             return;
         }
 
         if (direction == MoverDirection.DOWN) {
-            sprite.y += COLUMN_WIDTH;
+            screenY += ROW_WIDTH;
+            setSprites();
+
             grid_y--;
         }
     };
+
+    // This sets the sprites to their correct location based on the current
+    // screen position of the middle of the main sprite and the layour and 
+    // rotation of the block
+    function setSprites() {
+        var blocks = getBlocks(rotation * 90);
+        sprites.forEach(function(s, i) {
+            s.x = screenX + blocks[i].x * COLUMN_WIDTH;
+            s.y = screenY - blocks[i].y * ROW_WIDTH;
+        });
+    }
 
     //start sprite movement
     this.startMe = function (direction) {
@@ -315,22 +365,33 @@ var Tetrominoe = function (stage, assetManager, assetName, gameGrid) {
     };
 
     this.resetMe = function () {
-        sprite.gotoAndStop(spriteName);
-        sprite.x = START_X;
-        sprite.y = START_Y;
+        rotation = 0;
+        screenX = START_X;
+        screenY = START_Y;
+
+        // Set to top middle of grid.
+        grid_x = Math.round(grid.length / 2);
+        grid_y = grid[0].length - 3; // Minus two to allow some room
+
+        setSprites();
         active = true;
     };
 
     this.rotateMe = function () {
         if (this.canRotate()) {
-            sprite.rotation += 90;
-
             rotation++;
             if (rotation > 3) {
                 rotation = 0;
             }
+            setSprites();
         }
     };
+
+    this.destroyMe = function() {
+        sprites.forEach(function(s) {
+            stage.removeChild(s);
+        });
+    }
 
     this.resetMe();
 };
