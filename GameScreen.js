@@ -39,6 +39,8 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     grid.y = 0;
     screen.addChildAt(grid, 0);
     
+    var score;
+
     /************** Play Again Button Setup **************/
     var btnPlayAgain = assetManager.getSprite("assets");
     btnPlayAgain.gotoAndStop("btnPlayUp");
@@ -101,9 +103,10 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
         console.log("completedRows: " + JSON.stringify(completedRows));
 
-        // Award points for and delete completed rows
-
+        // Loop awards points for and deletes completed rows
         for(var r = 0; r < completedRows.length; r++) {
+            score = score + 10;
+            console.log(score);
             var row = completedRows[r] - r; // we subtract the r, because one row from the grid has been removed for each time this has looped
             shiftRow(row);
         }
@@ -119,6 +122,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     /************** Public Methods **************/
 
     this.onSetup = function () {
+        score = 0;
         grid = resetGrid();
         introScreen = myIntroScreen;
         tetro = nextPiece();
