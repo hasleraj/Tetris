@@ -27,6 +27,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     document.addEventListener("keyup", onKeyUp);
     document.addEventListener("keydown", onKeyDown);
 
+    var grid = null;
     var pieceBag = [];
     var oldTetros = [];
 
@@ -42,6 +43,17 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     /************** Private Methods **************/
 
+    function resetGrid() {
+        var grid = [];
+        for(var x = 0; x < 10; x++) {
+            grid[x] = [];
+            for(var y = 0; y < 20; y++) {
+                grid[x][y] = false;
+            }
+        }
+        return grid;
+    }
+
     function nextPiece() {
         if (pieceBag.length === 0) {
             //28 pieces in the tetrominoe bag
@@ -50,12 +62,14 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
         var selected = pieceBag.splice(Math.floor(Math.random() * pieceBag.length), 1)[0];
 
-        return new Tetrominoe(stage, assetManager, selected); //remove a single piece
+        return new Tetrominoe(stage, assetManager, selected, grid); //remove a single piece
     }
 
     /************** Public Methods **************/
 
     this.onSetup = function () {
+
+        grid = resetGrid();
 
         introScreen = myIntroScreen;
 
