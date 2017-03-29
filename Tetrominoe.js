@@ -28,13 +28,11 @@ var Tetrominoe = function (stage, assetManager, assetName, grid) {
     sprite.gotoAndStop(assetName);
     stage.addChild(sprite);
 
-    var spriteMover = new Mover(sprite, stage);
-
     /************** Public Methods **************/
     this.updateMe = function () {
-        if(active) {
+        if (active) {
             currentTicks++;
-            if(currentTicks >= TICKS_PER_MOVE) {
+            if (currentTicks >= TICKS_PER_MOVE) {
                 currentTicks = 0;
                 this.changeRow(MoverDirection.DOWN);
             }
@@ -63,21 +61,21 @@ var Tetrominoe = function (stage, assetManager, assetName, grid) {
         // this function, should when complete, check the grid positions 
         //  that the block would take up after moving it (or rotating it)
         //  in the given direction to see if conflicts exist.
-        switch(direction) {
+        switch (direction) {
         case MoverDirection.LEFT:
             return grid_x > 0; //temporary
         case MoverDirection.RIGHT:
             return grid_x < grid.length - 1; //temporary
         case MoverDirection.DOWN:
-            return grid_y > 0; 
+            return grid_y > 0;
         default:
             return false;
         }
-    }
+    };
 
     // moves the sprite one column to the left or right based on key input
     this.changeColumn = function (direction) {
-        if(!this.canMove(direction)) {
+        if (!this.canMove(direction)) {
             return;
         }
 
@@ -92,7 +90,7 @@ var Tetrominoe = function (stage, assetManager, assetName, grid) {
 
     //moves the sprite down one column at a time if user is pushing down arrow
     this.changeRow = function (direction) {
-        if(!this.canMove(direction)) {
+        if (!this.canMove(direction)) {
             this.landMe();
             return;
         }
@@ -106,11 +104,6 @@ var Tetrominoe = function (stage, assetManager, assetName, grid) {
     //start sprite movement
     this.startMe = function (direction) {
         active = true;
-    };
-
-    //set speed of Tetro
-    this.setSpeed = function (speed) {
-        spriteMover.setSpeed(speed);
     };
 
     this.resetMe = function () {
