@@ -15,14 +15,10 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
     const TICKS_PER_MOVE = 24;
 
     var screenX, screenY; // set to startx and starty in reset me
-
     var currentTicks = 0;
-
-    //var sprite = null;
     var active = false;
     var type = tetroType;
-
-    var grid = gameGrid; // reference to the main grid.
+    var grid = gameGrid;
 
     // Set to top middle of grid (5, 18) in resetMe;
     var grid_x, grid_y;
@@ -42,13 +38,13 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
 
     function getColor() {
         switch (type) {
-        case 'J': return 'purple';  // J
-        case 'O': return 'red';     // O
-        case 'T': return 'orange';  // T
-        case 'L': return 'yellow';  // L
-        case 'S': return 'pink';    // S
-        case 'Z': return 'green';   // Z
-        case 'I': return 'blue';    // I
+        case 'J': return 'purple';  // J block
+        case 'O': return 'red';     // O block
+        case 'T': return 'orange';  // T block
+        case 'L': return 'yellow';  // L block
+        case 'S': return 'pink';    // S block
+        case 'Z': return 'green';   // Z block
+        case 'I': return 'blue';    // I block
         default:
             console.error('unknown piece');
             return 'green';
@@ -74,7 +70,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
                 x: -1,
                 y: -1
             }];
-            break; // J
+            break; // J block
         case 'O':
             blocks = [{
                 x: 0,
@@ -89,7 +85,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
                 x: 1,
                 y: -1
             }];
-            break; // O
+            break; // O block
         case 'T':
             blocks = [{
                 x: 1,
@@ -104,7 +100,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
                 x: 0,
                 y: 1
             }];
-            break; // T
+            break; // T block
         case 'L':
             blocks = [{
                 x: 0,
@@ -119,7 +115,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
                 x: 1,
                 y: -1
             }];
-            break; // L
+            break; // L block
         case 'S':
             blocks = [{
                 x: 0,
@@ -134,7 +130,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
                 x: -1,
                 y: -1
             }];
-            break; // S
+            break; // S block
         case 'Z':
             blocks = [{
                 x: 0,
@@ -149,7 +145,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
                 x: 1,
                 y: -1
             }];
-            break; // Z
+            break; // Z block
         case 'I':
             blocks = [{
                 x: 0,
@@ -164,7 +160,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
                 x: 0,
                 y: -2
             }];
-            break; // I
+            break; // I block
         default:
             console.error('unknown piece');
             return [];
@@ -250,7 +246,6 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
 
     //called when hits bottom
     this.landMe = function () {
-
         // Sets the blocks in the main grid to true for the spots where the tetros blocks are.
         var blocks = getGridPlacement(grid_x, grid_y, rotation * 90);
         sprites.forEach(function(s, i) {
@@ -382,8 +377,8 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
     };
 
     this.destroyMe = function() {
-        sprites.forEach(function(s) {
-            stage.removeChild(s);
+        sprites.forEach(function(sprite) {
+            stage.removeChild(sprite);
         });
     };
 

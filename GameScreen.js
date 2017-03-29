@@ -31,6 +31,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     var grid = null;
     var pieceBag = [];
     var oldTetros = [];
+    var score;
     
     /************** Grid Background Setup **************/
     var gridBackground = assetManager.getSprite("assets");
@@ -39,8 +40,6 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     gridBackground.y = 0;
     screen.addChildAt(gridBackground, 0);
     
-    var score;
-
     /************** Play Again Button Setup **************/
     var btnPlayAgain = assetManager.getSprite("assets");
     btnPlayAgain.gotoAndStop("btnPlayUp");
@@ -129,7 +128,6 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     }
 
     /************** Public Methods **************/
-
     this.onSetup = function () {
         score = 0;
         grid = resetGrid();
