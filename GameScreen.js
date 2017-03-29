@@ -31,12 +31,19 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     var grid = null;
     var pieceBag = [];
     var oldTetros = [];
-
+    
+    /************** Grid Background Setup **************/
+    var grid = assetManager.getSprite("assets");
+    grid.gotoAndStop("grid");
+    grid.x = 30;
+    grid.y = 0;
+    screen.addChildAt(grid, 0);
+    
     /************** Play Again Button Setup **************/
     var btnPlayAgain = assetManager.getSprite("assets");
     btnPlayAgain.gotoAndStop("btnPlayUp");
-    btnPlayAgain.x = 350;
-    btnPlayAgain.y = 240;
+    btnPlayAgain.x = 50;
+    btnPlayAgain.y = 515;
     btnPlayAgain.buttonHelper = new createjs.ButtonHelper(btnPlayAgain, "btnResetUp", "btnResetDown", "btnResetDown", false);
     screen.addChild(btnPlayAgain);
     btnPlayAgain.addEventListener("click", onReset);
@@ -118,9 +125,8 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     };
 
     this.showMe = function () {
-        this.onSetup();
         stage.addChild(screen);
-
+        this.onSetup();
         // startup the ticker
         createjs.Ticker.setFPS(frameRate);
         createjs.Ticker.addEventListener("tick", onTick);
