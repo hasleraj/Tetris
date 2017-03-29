@@ -33,22 +33,31 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     var oldTetros = [];
     
     /************** Grid Background Setup **************/
-    var grid = assetManager.getSprite("assets");
-    grid.gotoAndStop("grid");
-    grid.x = 30;
-    grid.y = 0;
-    screen.addChildAt(grid, 0);
+    var gridBackground = assetManager.getSprite("assets");
+    gridBackground.gotoAndStop("grid");
+    gridBackground.x = 30;
+    gridBackground.y = 0;
+    screen.addChildAt(gridBackground, 0);
     
     var score;
 
     /************** Play Again Button Setup **************/
     var btnPlayAgain = assetManager.getSprite("assets");
     btnPlayAgain.gotoAndStop("btnPlayUp");
-    btnPlayAgain.x = 50;
+    btnPlayAgain.x = 60;
     btnPlayAgain.y = 515;
     btnPlayAgain.buttonHelper = new createjs.ButtonHelper(btnPlayAgain, "btnResetUp", "btnResetDown", "btnResetDown", false);
     screen.addChild(btnPlayAgain);
     btnPlayAgain.addEventListener("click", onReset);
+    
+    /************** Back Button Setup **************/
+    var btnBack = assetManager.getSprite("assets");
+    btnBack.gotoAndStop("btnMenuUp");
+    btnBack.x = 300;
+    btnBack.y = 515;
+    btnBack.buttonHelper = new createjs.ButtonHelper(btnBack, "btnMenuUp", "btnMenuDown", "btnMenuDown", false);
+    screen.addChild(btnBack);
+    btnBack.addEventListener("click", onClickMain);
 
     /************** Game Over **************/
     var txtGameOver = assetManager.getSprite("assets");
@@ -199,6 +208,12 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         grid = null;
         screen.removeChild(txtGameOver);
         me.onSetup();
+    }
+    
+    function onClickMain(e) {
+        onReset();
+        eventScreenComplete.buttonNumber = 0;
+        stage.dispatchEvent(eventScreenComplete);
     }
 
     function onKeyDown(e) {

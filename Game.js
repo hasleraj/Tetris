@@ -95,13 +95,10 @@
     }
     
     function onContentFinished(e) {
-        /*if (e.buttonNumber === 1) {
-            introScreen.hideMe();
-            contentScreen.showMe();
-        } else if (e.buttonNumber === 2) {
-            introScreen.hideMe();
-            instructionScreen.showMe();
-        }*/
+        if (e.buttonNumber === 0) {
+            introScreen.showMe();
+            contentScreen.hideMe();
+        }
     }
 
 })();
