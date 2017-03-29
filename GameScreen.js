@@ -95,9 +95,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
         console.log("completedRows: " + JSON.stringify(completedRows));
 
-        // Award points for and delete completed rows
-        
-
+        // Loop awards points for and deletes completed rows
         for(var r = 0; r < completedRows.length; r++) {
             score = score + 10;
             console.log(score);
