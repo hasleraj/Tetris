@@ -74,6 +74,40 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
         return new Tetrominoe(stage, assetManager, selected, grid); //remove a single piece
     }
+    
+    function checkGrid() {
+
+        // Loops through the grid and finds any horizontal rows where every
+        // value is true, this is a completed row and should be scored and removed.
+        var completedRows = [];
+        for(var y = 0; y < grid[0].length; y++) {
+            var rowComplete = true;
+            for(var x = 0; x < grid.length; x++) {
+                if(grid[x][y] === null) {
+                    rowComplete = false;
+                }
+            }
+            if(rowComplete) {
+                completedRows.push(y);
+            }
+        }
+
+        console.log("completedRows: " + JSON.stringify(completedRows));
+
+        // Award points for and delete completed rows
+
+        for(var r = 0; r < completedRows.length; r++) {
+            var row = completedRows[r] - r; // we subtract the r, because one row from the grid has been removed for each time this has looped
+            shiftRow(row);
+        }
+
+        // Check if the grid is ready to have another piece added or not.
+        if(grid[5][18] !== null) {
+            // Game over
+            gameOver();
+            pause = true;
+        }
+    }
 
     /************** Public Methods **************/
 
@@ -128,40 +162,6 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         }
     }
 
-    function checkGrid() {
-
-        // Loops through the grid and finds any horizontal rows where every
-        // value is true, this is a completed row and should be scored and removed.
-        var completedRows = [];
-        for(var y = 0; y < grid[0].length; y++) {
-            var rowComplete = true;
-            for(var x = 0; x < grid.length; x++) {
-                if(grid[x][y] == null) {
-                    rowComplete = false;
-                }
-            }
-            if(rowComplete) {
-                completedRows.push(y);
-            }
-        }
-
-        console.log("completedRows: " + JSON.stringify(completedRows));
-
-        // Award points for and delete completed rows
-
-        for(var r = 0; r < completedRows.length; r++) {
-            var row = completedRows[r] - r; // we subtract the r, because one row from the grid has been removed for each time this has looped
-            shiftRow(row);
-        }
-
-        // Check if the grid is ready to have another piece added or not.
-        if(grid[5][18] != null) {
-            // Game over
-            gameOver();
-            pause = true;
-        }
-    }
-
     function shiftRow(r) {
         //for every square in row r, remove it
         for(var x = 0; x < grid.length; x++) {
@@ -171,8 +171,8 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         // move every row above row r, down a row. including their sprites
         for(var x = 0; x < grid.length; x++) {
             for(var y = r + 1; y < grid[0].length; y++) {
-                var t = grid[x][y]
-                if(t != null) t.y += 27;
+                var t = grid[x][y];
+                if(t !== null) t.y += 27;
                 grid[x][y - 1] = t;
                 grid[x][y] = null;
             }

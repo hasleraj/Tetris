@@ -18,28 +18,23 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
 
     var currentTicks = 0;
 
-    var sprite = null;
+    //var sprite = null;
     var active = false;
     var type = tetroType;
 
     var grid = gameGrid; // reference to the main grid.
 
-    //start top middle
     // Set to top middle of grid (5, 18) in resetMe;
     var grid_x, grid_y;
 
     var rotation = 0; // current number of rotations resets to 0 if it would hit 4
 
-    //sprite = assetManager.getSprite("assets");
-    //sprite.gotoAndStop(tetroType);
-    //stage.addChild(sprite);
-
     var sprites = [];
     for(var i = 0; i < 4; i++) {
-        var s = assetManager.getSprite("assets");
-        s.gotoAndStop(getColor());
-        stage.addChild(s);
-        sprites.push(s);
+        var sprite = assetManager.getSprite("assets");
+        sprite.gotoAndStop(getColor());
+        stage.addChild(sprite);
+        sprites.push(sprite);
     }
 
 
@@ -184,7 +179,9 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
             // see https://en.wikipedia.org/wiki/Rotation_(mathematics) 
             // under 'Two Dimensions'
 
-            var rotationRadians = rotationAngle * -0.0174533; //negative since we're going clockwise
+            
+            //convert from degrees to radians
+            var rotationRadians = rotationAngle * -0.0174533; //negative since we're going clockwise, this number is pi/180
 
             for (var b = 0; b < blocks.length; b++) {
                 var rotated = {};
@@ -233,8 +230,6 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
             }
         });
 
-        //console.log('new position ' + valid + '\n' + JSON.stringify(blocks))
-
         return valid;
     }
 
@@ -260,9 +255,9 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
         var blocks = getGridPlacement(grid_x, grid_y, rotation * 90);
         sprites.forEach(function(s, i) {
             grid[blocks[i].x][blocks[i].y] = s;
-        })
+        });
 
-        // Stop any future action
+        // Tetro stopped
         active = false;
     };
 
@@ -276,7 +271,6 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
     this.canMove = function (direction) {
         //inactive tetro can never move
         if (!active) {
-            console.log('inactive, not moving');
             return false;
         }
 
@@ -391,7 +385,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
         sprites.forEach(function(s) {
             stage.removeChild(s);
         });
-    }
+    };
 
     this.resetMe();
 };
