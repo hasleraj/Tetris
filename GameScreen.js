@@ -64,8 +64,8 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     /************** Game Over **************/
     var txtGameOver = assetManager.getSprite("assets");
     txtGameOver.gotoAndStop("gameOver");
-    txtGameOver.x = 0;
-    txtGameOver.y = 0;
+    txtGameOver.x = 40;
+    txtGameOver.y = 180;
 
     function gameOver() {
         screen.addChild(txtGameOver);
@@ -143,12 +143,12 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
             console.log("Level: " + level);
             console.log("Rows Remaining: " + rowsRemaining);
             
-            var row = completedRows[r] - r; // we subtract the r, because one row from the grid has been removed for each time this has looped
+            var row = completedRows[r] - r; //subtract the r, because one row from the grid has been removed for each time this has looped
             shiftRow(row);
         }
 
         // Check if the grid is ready to have another piece added or not.
-        if(grid[5][18] !== null) {
+        if(grid[5][17] !== null) {
             // Game over
             gameOver();
             pause = true;
