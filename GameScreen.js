@@ -64,11 +64,11 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     /************** Game Over **************/
     var txtGameOver = assetManager.getSprite("assets");
     txtGameOver.gotoAndStop("gameOver");
-    txtGameOver.x = 40;
-    txtGameOver.y = 180;
+    txtGameOver.x = 260;
+    txtGameOver.y = 160;
 
     function gameOver() {
-        screen.addChild(txtGameOver);
+        screen.addChildAt(txtGameOver, 3);
     }
 
     /************** Private Methods **************/
