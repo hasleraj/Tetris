@@ -12,7 +12,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
     const COLUMN_WIDTH = 27;
     const ROW_WIDTH = 27;
     //number of ticks before movement is forced
-    const TICKS_PER_MOVE = 24;
+    var ticksPerMove = 24;
 
     var screenX, screenY; // set to startx and starty in reset me
     var currentTicks = 0;
@@ -233,7 +233,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
     this.updateMe = function () {
         if (active) {
             currentTicks++;
-            if (currentTicks >= TICKS_PER_MOVE) {
+            if (currentTicks >= ticksPerMove) {
                 currentTicks = 0;
                 this.changeRow(MoverDirection.DOWN);
             }
@@ -382,5 +382,12 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
         });
     };
 
+    this.setSpeed = function (speed) {
+        if(ticksPerMove === 0) {
+            ticksPerMove = 1;
+        } else {
+            ticksPerMove = ticksPerMove - speed;
+        }
+    };
     this.resetMe();
 };
