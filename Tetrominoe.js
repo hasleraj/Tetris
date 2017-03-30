@@ -3,28 +3,33 @@
 /*jshint esversion: 6 */
 /* globals Mover */
 /* globals MoverDirection */
-var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
+var Tetrominoe = function (stage, assetManager, tetroType, gameGrid, gridBackgroundSpriteX, gridBackgroundSpriteY) {
     "use strict";
-    //placement 
-    const START_X = 200;
-    const START_Y = 30;
-    //width of rows and columns
-    const COLUMN_WIDTH = 27;
-    const ROW_WIDTH = 27;
-    //number of ticks before movement is forced
-    var ticksPerMove = 24;
 
+    //width of rows and columns in pixels
+    const BLOCK_SIZE = 27;
+
+    // The top left point of the grid image on the screen 
+    var gridSpriteX = gridBackgroundSpriteX;
+    var gridSpriteY = gridBackgroundSpriteY;
+
+    var ticksPerMove = 24;
+    // Current co-ordinates of the (0,0) block's sprite on the screen
     var screenX, screenY; // set to startx and starty in reset me
+
+    // Current co-ordinates on the game grid of the (0, 0) block
+    // Set to top middle of grid (5, 18) in resetMe;
+    var grid_x, grid_y;
+
+     //Ticks since last movement happened
     var currentTicks = 0;
+    // Current number of rotations (each is 90 degrees). Resets to 0 if it hits 4
+    var rotation = 0;
     var active = false;
     var type = tetroType;
     var grid = gameGrid;
 
-    // Set to top middle of grid (5, 18) in resetMe;
-    var grid_x, grid_y;
-
-    var rotation = 0; // current number of rotations resets to 0 if it would hit 4
-
+    // Get the 4 sprite blocks that make up the object
     var sprites = [];
     for(var i = 0; i < 4; i++) {
         var sprite = assetManager.getSprite("assets");
@@ -53,7 +58,6 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
 
     function getBlocks(rotationAngle) {
         var blocks;
-
         // these are the normal co-ordinates of unrotated blocks
         switch (type) {
         case 'J':
@@ -168,26 +172,27 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
 
         // Square should never be transformed because it doesn't rotate around one of it's blocks
         if (type != 'O') {
-            // we need to change them depending on rotation
-            // The formula is:
-            // [x1, y1] = [xcosθ - ysinθ, xsinθ + ycosθ];
+            // we need to change the coordinates depending on rotation
+            // The formula is: [x1, y1] = [xcosθ - ysinθ, xsinθ + ycosθ];
             // where θ is the rotation in counter clockwise radians
+            // I got this equation from wikipedia
             // see https://en.wikipedia.org/wiki/Rotation_(mathematics) 
-            // under 'Two Dimensions'
-
             
             //convert from degrees to radians
             var rotationRadians = rotationAngle * -0.0174533; //negative since we're going clockwise, this number is pi/180
 
             for (var b = 0; b < blocks.length; b++) {
-                var rotated = {};
-                rotated.x = blocks[b].x * Math.cos(rotationRadians) - blocks[b].y * Math.sin(rotationRadians);
-                rotated.x = Math.round(rotated.x); // round to nearest int
+                var rotatedBlock = {}; // The blocks new co-ordinates after rotation
 
-                rotated.y = blocks[b].x * Math.sin(rotationRadians) + blocks[b].y * Math.cos(rotationRadians);
-                rotated.y = Math.round(rotated.y);
+                // x1 = xcosθ - ysinθ
+                rotatedBlock.x = blocks[b].x * Math.cos(rotationRadians) - blocks[b].y * Math.sin(rotationRadians);
+                rotatedBlock.x = Math.round(rotatedBlock.x); // round to nearest int
 
-                blocks[b] = rotated;
+                // y1 = xsinθ + ycosθ
+                rotatedBlock.y = blocks[b].x * Math.sin(rotationRadians) + blocks[b].y * Math.cos(rotationRadians);
+                rotatedBlock.y = Math.round(rotatedBlock.y); // round to nearest int
+
+                blocks[b] = rotatedBlock;
             }
         }
 
@@ -198,13 +203,14 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
     function getGridPlacement(gridX, gridY, rotationAngle) {
         var blocks = getBlocks(rotationAngle);
 
-        // Now the blocks are set in relation to the tetro's origin point
-        // We need to offset them based on the gridX and gridY
-        for (var b = 0; b < blocks.length; b++) {
+        // The blocks are now the properly rotated versions of the (0,0), (0,1), etc
+        // but they need to have their position corrected to where they would be in
+        // the game grid.
+        for (var block = 0; block < blocks.length; block++) {
             var offsetBlock = {};
-            offsetBlock.x = blocks[b].x + gridX;
-            offsetBlock.y = blocks[b].y + gridY;
-            blocks[b] = offsetBlock;
+            offsetBlock.x = blocks[block].x + gridX;
+            offsetBlock.y = blocks[block].y + gridY;
+            blocks[block] = offsetBlock;
         }
 
         return blocks;
@@ -215,13 +221,13 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
         var blocks = getGridPlacement(gridX, gridY, rotationAngle);
         var valid = true;
 
-        // Now we loop through each block and check that it isn't set to true in the grid
+        // Loop through each potential block location and check if it's a valid position in the grid
         blocks.forEach(function (block) {
-            if (block.x < 0 ||
-                block.x >= grid.length ||
-                block.y < 0 ||
-                block.y >= grid[block.x].length ||
-                grid[block.x][block.y] !== null) {
+            if (block.x < 0 || // if it would be too far left
+                block.x >= grid.length || // or too far right
+                block.y < 0 || // or too far down
+                block.y >= grid[block.x].length || // or too far up
+                grid[block.x][block.y] !== null) { // or there is already a block at that grid location
                 valid = false;
             }
         });
@@ -246,13 +252,17 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
 
     //called when hits bottom
     this.landMe = function () {
-        // Sets the blocks in the main grid to true for the spots where the tetros blocks are.
+
+        // This takes each sprite of the tetro and sets the grid value for the position it is in
+        //  to the sprite. This allows gameScreen to remove these sprites when a line is completed
+        //  as well as lets the next tetro check which locations are in/valid in the grid
         var blocks = getGridPlacement(grid_x, grid_y, rotation * 90);
-        sprites.forEach(function(s, i) {
-            grid[blocks[i].x][blocks[i].y] = s;
+        sprites.forEach(function(sprite, blockNumber) {
+            var x = blocks[blockNumber].x;
+            var y = blocks[blockNumber].y;
+            grid[x][y] = sprite;
         });
 
-        // Tetro stopped
         active = false;
     };
 
@@ -264,37 +274,37 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
     };
 
     this.canMove = function (direction) {
-        //inactive tetro can never move
+        //make sure inactive tetro can't move
         if (!active) {
             return false;
         }
 
-        var newX = grid_x;
-        var newY = grid_y;
+        var newGridX = grid_x;
+        var newGridY = grid_y;
 
         // this function, should when complete, check the grid positions 
         //  that the block would take up after moving it (or rotating it)
         //  in the given direction to see if conflicts exist.
         switch (direction) {
         case MoverDirection.LEFT:
-            newX--;
+            newGridX--;
             break;
         case MoverDirection.RIGHT:
-            newX++;
+            newGridX++;
             break;
         case MoverDirection.DOWN:
-            newY--;
+            newGridY--;
             break;
         default:
             console.log('invalid direction');
             return false;
         }
 
-        return isValidPosition(newX, newY, rotation * 90);
+        return isValidPosition(newGridX, newGridY, rotation * 90);
     };
 
     this.canRotate = function () {
-        //inactive tetro can never move, squares don't rotate
+        //inactive tetro can't move, squares don't rotate
         if (!active || type == 'O') {
             return false;
         }
@@ -310,12 +320,12 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
         }
 
         if (direction == MoverDirection.LEFT) {
-            screenX -= COLUMN_WIDTH;
+            screenX -= BLOCK_SIZE;
             setSprites();
 
             grid_x--;
         } else if (direction == MoverDirection.RIGHT) {
-            screenX += COLUMN_WIDTH;
+            screenX += BLOCK_SIZE;
             setSprites();
 
             grid_x++;
@@ -330,7 +340,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
         }
 
         if (direction == MoverDirection.DOWN) {
-            screenY += ROW_WIDTH;
+            screenY += BLOCK_SIZE;
             setSprites();
 
             grid_y--;
@@ -338,13 +348,13 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
     };
 
     // This sets the sprites to their correct location based on the current
-    // screen position of the middle of the main sprite and the layour and 
+    // screen position of the middle of the main sprite and the layout and 
     // rotation of the block
     function setSprites() {
         var blocks = getBlocks(rotation * 90);
-        sprites.forEach(function(s, i) {
-            s.x = screenX + blocks[i].x * COLUMN_WIDTH;
-            s.y = screenY - blocks[i].y * ROW_WIDTH;
+        sprites.forEach(function(sprite, blockNumber) {
+            sprite.x = screenX + blocks[blockNumber].x * BLOCK_SIZE;
+            sprite.y = screenY - blocks[blockNumber].y * BLOCK_SIZE;
         });
     }
 
@@ -355,12 +365,17 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid) {
 
     this.resetMe = function () {
         rotation = 0;
-        screenX = START_X;
-        screenY = START_Y;
 
-        // Set to top middle of grid.
+        // Set the tetros grid position to top middle of grid.
         grid_x = Math.round(grid.length / 2);
-        grid_y = grid[0].length - 3; // Minus two to allow some room
+        // Minus three to allow some room so the I piece doesn't think it's out of bounds right away.
+        grid_y = grid[0].length - 3;
+
+        // This sets the initial starting positions of the sprites to be based off of where the 
+        // grid background image is. If the background is moved the tetros still display
+        // in the right spot. The values (1.3 and 2) were guessed until things fit
+        screenX = gridSpriteX + ( (grid_x + 1.3) * BLOCK_SIZE );
+        screenY = gridSpriteY + ( (grid[0].length - grid_y - 2) * BLOCK_SIZE );
 
         setSprites();
         active = true;

@@ -74,10 +74,22 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     /************** Private Methods **************/
 
     function resetGrid() {
+        // This creates an empty grid. Example grid: 2 x 3
+        /*
+        [        y0    y1    y2
+            x0 [null, null, null],
+            x1 [null, null, null]
+        ]
+        */
+
+        var grid_width = 10;
+        var grid_height = 20;
+
         var grid = [];
-        for(var x = 0; x < 10; x++) {
+        //loop through and make sure the grid is empty
+        for(var x = 0; x < grid_width; x++) {
             grid[x] = [];
-            for(var y = 0; y < 20; y++) {
+            for(var y = 0; y < grid_height; y++) {
                 grid[x][y] = null;
             }
         }
@@ -90,9 +102,11 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
             pieceBag = ["J", "J", "J", "J", "O", "O", "O", "O", "T", "T", "T", "T", "L", "L", "L", "L", "S", "S", "S", "S", "Z", "Z", "Z", "Z", "I", "I", "I", "I"];
         }
 
+        //remove a single random piece
         var selected = pieceBag.splice(Math.floor(Math.random() * pieceBag.length), 1)[0];
 
-        return new Tetrominoe(stage, assetManager, selected, grid); //remove a single piece
+        // create a tetro from it and return it.
+        return new Tetrominoe(stage, assetManager, selected, grid, gridBackground.x, gridBackground.y);
     }
     
     function checkGrid() {
@@ -205,9 +219,9 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         // move every row above row r, down a row. including their sprites
         for(var x = 0; x < grid.length; x++) {
             for(var y = r + 1; y < grid[0].length; y++) {
-                var t = grid[x][y];
-                if(t !== null) t.y += 27;
-                grid[x][y - 1] = t;
+                var blockSprite = grid[x][y];
+                if(blockSprite !== null) blockSprite.y += 27;
+                grid[x][y - 1] = blockSprite;
                 grid[x][y] = null;
             }
         }
@@ -215,13 +229,17 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     function onReset(e) {
         pause = false;
+
         tetro.destroyMe();
         tetro = null;
+
         oldTetros.forEach(function(t) { t.destroyMe(); });
         oldTetros = [];
+
         pieceBag = [];
         grid = null;
         screen.removeChild(txtGameOver);
+
         me.onSetup();
     }
     
