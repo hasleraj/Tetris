@@ -32,7 +32,10 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     var pieceBag = [];
     var oldTetros = [];
     var score;
-
+    var level;
+    var rowsRemaining;
+    var speed;
+    
     /************** Play Again Button Setup **************/
     var btnPlayAgain = assetManager.getSprite("assets");
     btnPlayAgain.gotoAndStop("btnPlayUp");
@@ -77,7 +80,6 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     }
     
     function checkGrid() {
-
         // Loops through the grid and finds any horizontal rows where every
         // value is true, this is a completed row and should be scored and removed.
         var completedRows = [];
@@ -98,7 +100,19 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         // Loop awards points for and deletes completed rows
         for(var r = 0; r < completedRows.length; r++) {
             score = score + 10;
-            console.log(score);
+            rowsRemaining--;
+            
+            if(rowsRemaining === 0){
+                level++;
+                rowsRemaining = 10;
+                speed++;
+                tetro.setSpeed(speed);
+            }
+            
+            console.log("Score: " + score);
+            console.log("Level: " + level);
+            console.log("Rows Remaining: " + rowsRemaining);
+            
             var row = completedRows[r] - r; // we subtract the r, because one row from the grid has been removed for each time this has looped
             shiftRow(row);
         }
@@ -115,6 +129,9 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     this.onSetup = function () {
         score = 0;
+        level = 1;
+        rowsRemaining = 10;
+        speed = 0;
         grid = resetGrid();
         introScreen = myIntroScreen;
         tetro = nextPiece();
@@ -195,7 +212,6 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     }
 
     function onKeyDown(e) {
-        var speed = 2;
         if (e.keyCode == 37) leftKey = true;
         else if (e.keyCode == 39) rightKey = true;
         else if (e.keyCode == 38) upKey = true;
