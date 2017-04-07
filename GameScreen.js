@@ -64,11 +64,12 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     /************** Game Over **************/
     var txtGameOver = assetManager.getSprite("assets");
     txtGameOver.gotoAndStop("gameOver");
-    txtGameOver.x = 260;
+    txtGameOver.x = 60;
     txtGameOver.y = 160;
 
     function gameOver() {
-        screen.addChildAt(txtGameOver, 3);
+        createjs.Sound.play("gameOver");
+        stage.addChild(txtGameOver);
     }
 
     /************** Private Methods **************/
@@ -122,6 +123,10 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
             }
             if(rowComplete) {
                 completedRows.push(y);
+            }
+            
+            if(completedRows.length === 4) {
+                createjs.Sound.play("mouseClick");
             }
         }
 
@@ -239,7 +244,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
         pieceBag = [];
         grid = null;
-        screen.removeChild(txtGameOver);
+        stage.removeChild(txtGameOver);
 
         me.onSetup();
     }

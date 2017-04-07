@@ -14,5 +14,9 @@ var manifest = [
         src: "lib/sfx/mouseClick.ogg",
         id: "mouseClick",
         data: 4
+    }, {
+        src: "lib/sfx/gameOver.ogg",
+        id: "gameOver",
+        data: 4
     }
 ];

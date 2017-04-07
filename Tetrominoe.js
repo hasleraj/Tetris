@@ -262,7 +262,6 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid, gridBackgro
             grid[x][y] = sprite;
         });
 
-        createjs.Sound.play("dropTetro");
         active = false;
     };
 
@@ -344,6 +343,10 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid, gridBackgro
             setSprites();
 
             grid_y--;
+        }
+        
+        if (!this.canMove(direction)) {
+            createjs.Sound.play("dropTetro");
         }
     };
 
