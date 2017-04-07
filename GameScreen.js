@@ -50,7 +50,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     btnPlayAgain.y = 515;
     btnPlayAgain.buttonHelper = new createjs.ButtonHelper(btnPlayAgain, "btnResetUp", "btnResetDown", "btnResetDown", false);
     screen.addChild(btnPlayAgain);
-    btnPlayAgain.addEventListener("click", onReset);
+    btnPlayAgain.addEventListener("click", onClickPlayAgain);
     
     /************** Back Button Setup **************/
     var btnBack = assetManager.getSprite("assets");
@@ -162,6 +162,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     /************** Public Methods **************/
     this.onSetup = function () {
+        pause = false;
         score = 0;
         level = 1;
         rowsRemaining = 10;
@@ -245,8 +246,8 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         pieceBag = [];
         grid = null;
         stage.removeChild(txtGameOver);
+        pause = true;
 
-        me.onSetup();
     }
     
     function onClickMain(e) {
@@ -254,6 +255,11 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         onReset();
         eventScreenComplete.buttonNumber = 0;
         stage.dispatchEvent(eventScreenComplete);
+    }
+    
+    function onClickPlayAgain(e) {
+        onReset();
+        me.onSetup();
     }
 
     function onKeyDown(e) {
