@@ -48,11 +48,13 @@ var IntroScreen = function (assetManager, stage) {
     /************** Event Handlers **************/
 
     function onClickPlay(e) {
+        createjs.Sound.play("mouseClick");
         eventScreenComplete.buttonNumber = 1;
         stage.dispatchEvent(eventScreenComplete);
     }
 
     function onClickInstruction(e) {
+        createjs.Sound.play("mouseClick");
         eventScreenComplete.buttonNumber = 2;
         stage.dispatchEvent(eventScreenComplete);
     }

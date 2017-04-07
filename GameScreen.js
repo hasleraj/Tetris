@@ -125,7 +125,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
             }
         }
 
-        console.log("completedRows: " + JSON.stringify(completedRows));
+        //console.log("completedRows: " + JSON.stringify(completedRows));
 
         // Loop awards points for and deletes completed rows
         for(var r = 0; r < completedRows.length; r++) {
@@ -228,6 +228,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     }
 
     function onReset(e) {
+        createjs.Sound.play("mouseClick");
         pause = false;
 
         tetro.destroyMe();
@@ -244,6 +245,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     }
     
     function onClickMain(e) {
+        createjs.Sound.play("mouseClick");
         onReset();
         eventScreenComplete.buttonNumber = 0;
         stage.dispatchEvent(eventScreenComplete);

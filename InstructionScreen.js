@@ -37,6 +37,7 @@ var InstructionScreen = function (assetManager, stage) {
 
     /************** Event Handelrs **************/
     function onClickMain(e) {
+        createjs.Sound.play("mouseClick");
         eventScreenComplete.buttonNumber = 0;
         stage.dispatchEvent(eventScreenComplete);
     }
