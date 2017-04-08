@@ -32,6 +32,9 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     var pieceBag = [];
     var oldTetros = [];
     var score;
+    var scoreText = null;
+    var levelText = null;
+    var rowsRemainingText = null;
     var level;
     var rowsRemaining;
     var speed;
@@ -144,9 +147,10 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
                 tetro.setSpeed(speed);
             }
             
-            console.log("Score: " + score);
-            console.log("Level: " + level);
-            console.log("Rows Remaining: " + rowsRemaining);
+            //update all displayed text
+            scoreText.text = score.toString();
+            levelText.text = level.toString();
+            rowsRemainingText.text = rowsRemaining.toString();
             
             var row = completedRows[r] - r; //subtract the r, because one row from the grid has been removed for each time this has looped
             shiftRow(row);
@@ -162,6 +166,24 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     /************** Public Methods **************/
     this.onSetup = function () {
+        scoreText = new createjs.Text("0", "32px VT323", "#ffffff");
+        scoreText.x = 465;
+        scoreText.y = 115;
+        scoreText.textBaseline = "alphabetic";
+        stage.addChild(scoreText);
+        
+        levelText = new createjs.Text("1", "32px VT323", "#ffffff");
+        levelText.x = 465;
+        levelText.y = 235;
+        levelText.textBaseline = "alphabetic";
+        stage.addChild(levelText);
+        
+        rowsRemainingText = new createjs.Text("10", "32px VT323", "#ffffff");
+        rowsRemainingText.x = 455;
+        rowsRemainingText.y = 355;
+        rowsRemainingText.textBaseline = "alphabetic";
+        stage.addChild(rowsRemainingText);
+        
         pause = false;
         score = 0;
         level = 1;
@@ -246,6 +268,9 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         pieceBag = [];
         grid = null;
         stage.removeChild(txtGameOver);
+        stage.removeChild(scoreText);
+        stage.removeChild(levelText);
+        stage.removeChild(rowsRemainingText);
         pause = true;
 
     }
