@@ -23,6 +23,7 @@
     var frameRate = 24;
     // game objects
     var assetManager = null;
+    var myMusic = null;
 
     var introScreen = null,
         contentScreen = null,
@@ -57,6 +58,14 @@
         introScreen = new IntroScreen(assetManager, stage);
         contentScreen = new GameScreen(assetManager, stage, introScreen);
         instructionScreen = new InstructionScreen(assetManager, stage);
+        
+        //Repeat background music on continuous loop
+        myMusic = new Audio('lib/sfx/themesong.ogg');
+        myMusic.addEventListener('ended', function () {
+            this.currentTime = 0;
+            this.play();
+        }, false);
+        myMusic.play();
 
         introScreen.showMe();
 
@@ -73,7 +82,6 @@
 
 
     function onTick(e) {
-        // update the stage!
         stage.update();
     }
 

@@ -26,5 +26,9 @@ var manifest = [
         src: "lib/sfx/line.ogg",
         id: "line",
         data: 4
+    }, {
+        src: "lib/sfx/themesong.ogg",
+        id: "tetristheme",
+        data: 4
     }
 ];
