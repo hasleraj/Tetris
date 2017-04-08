@@ -127,12 +127,14 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
             if(rowComplete) {
                 completedRows.push(y);
             }
-            
-            if(completedRows.length === 4) {
-                createjs.Sound.play("mouseClick");
-            }
         }
 
+        //if 4 rows complete play different sound than if 3 or less lines complete
+        if(completedRows.length === 4) {
+            createjs.Sound.play("tetris");
+        } else if(completedRows.length > 0 && completedRows.length < 4) {
+            createjs.Sound.play("line");
+        }
         //console.log("completedRows: " + JSON.stringify(completedRows));
 
         // Loop awards points for and deletes completed rows
