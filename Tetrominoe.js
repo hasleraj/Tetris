@@ -223,11 +223,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid, gridBackgro
 
         // Loop through each potential block location and check if it's a valid position in the grid
         blocks.forEach(function (block) {
-            if (block.x < 0 || // if it would be too far left
-                block.x >= grid.length || // or too far right
-                block.y < 0 || // or too far down
-                block.y >= grid[block.x].length || // or too far up
-                grid[block.x][block.y] !== null) { // or there is already a block at that grid location
+            if(!grid.isPositionValid(block.x, block.y) || grid.isPositionTaken(block.x, block.y)) {
                 valid = false;
             }
         });
@@ -259,7 +255,7 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid, gridBackgro
         sprites.forEach(function(sprite, blockNumber) {
             var x = blocks[blockNumber].x;
             var y = blocks[blockNumber].y;
-            grid[x][y] = sprite;
+            grid.setBlock(x, y, sprite);
         });
 
         active = false;
@@ -369,16 +365,16 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid, gridBackgro
     this.resetMe = function () {
         rotation = 0;
 
+        var spawnPosition = grid.getSpawnPosition();
         // Set the tetros grid position to top middle of grid.
-        grid_x = Math.round(grid.length / 2);
-        // Minus three to allow some room so the I piece doesn't think it's out of bounds right away.
-        grid_y = grid[0].length - 3;
+        grid_x = spawnPosition.x;
+        grid_y = spawnPosition.y;
 
         // This sets the initial starting positions of the sprites to be based off of where the 
         // grid background image is. If the background is moved the tetros still display
         // in the right spot. The values (1.3 and 2) were guessed until things fit
         screenX = gridSpriteX + ( (grid_x + 1.3) * BLOCK_SIZE );
-        screenY = gridSpriteY + ( (grid[0].length - grid_y - 2) * BLOCK_SIZE );
+        screenY = gridSpriteY + ( (grid.getHeight() - grid_y - 2) * BLOCK_SIZE );
 
         setSprites();
         active = true;

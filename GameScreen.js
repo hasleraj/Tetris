@@ -4,6 +4,7 @@
 /*globals AssetManager */
 /*jshint esversion: 6 */
 /* globals Tetrominoe */
+/* globals Grid */
 /* globals IntroScreen */
 /* globals MoverDirection*/
 var GameScreen = function (assetManager, stage, myIntroScreen) {
@@ -77,29 +78,6 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
 
     /************** Private Methods **************/
 
-    function resetGrid() {
-        // This creates an empty grid. Example grid: 2 x 3
-        /*
-        [        y0    y1    y2
-            x0 [null, null, null],
-            x1 [null, null, null]
-        ]
-        */
-
-        var grid_width = 10;
-        var grid_height = 20;
-
-        var grid = [];
-        //loop through and make sure the grid is empty
-        for(var x = 0; x < grid_width; x++) {
-            grid[x] = [];
-            for(var y = 0; y < grid_height; y++) {
-                grid[x][y] = null;
-            }
-        }
-        return grid;
-    }
-
     function nextPiece() {
         if (pieceBag.length === 0) {
             //28 pieces in the tetrominoe bag
@@ -116,18 +94,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
     function checkGrid() {
         // Loops through the grid and finds any horizontal rows where every
         // value is true, this is a completed row and should be scored and removed.
-        var completedRows = [];
-        for(var y = 0; y < grid[0].length; y++) {
-            var rowComplete = true;
-            for(var x = 0; x < grid.length; x++) {
-                if(grid[x][y] === null) {
-                    rowComplete = false;
-                }
-            }
-            if(rowComplete) {
-                completedRows.push(y);
-            }
-        }
+        var completedRows = grid.getCompletedRows();
 
         //if 4 rows complete play different sound than if 3 or less lines complete
         if(completedRows.length === 4) {
@@ -155,11 +122,11 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
             rowsRemainingText.text = rowsRemaining.toString();
             
             var row = completedRows[r] - r; //subtract the r, because one row from the grid has been removed for each time this has looped
-            shiftRow(row);
+            grid.shiftRow(row);
         }
 
         // Check if the grid is ready to have another piece added or not.
-        if(grid[5][17] !== null) {
+        if(grid.isFull()) {
             // Game over
             gameOver();
             pause = true;
@@ -191,7 +158,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         level = 1;
         rowsRemaining = 10;
         speed = 0;
-        grid = resetGrid();
+        grid = new Grid(stage);
         introScreen = myIntroScreen;
         tetro = nextPiece();
     };
@@ -240,23 +207,6 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         }
     }
 
-    function shiftRow(r) {
-        //for every square in row r, remove it
-        for(var x = 0; x < grid.length; x++) {
-            stage.removeChild(grid[x][r]);
-        }
-
-        // move every row above row r, down a row. including their sprites
-        for(var x = 0; x < grid.length; x++) {
-            for(var y = r + 1; y < grid[0].length; y++) {
-                var blockSprite = grid[x][y];
-                if(blockSprite !== null) blockSprite.y += 27;
-                grid[x][y - 1] = blockSprite;
-                grid[x][y] = null;
-            }
-        }
-    }
-
     function onReset(e) {
         createjs.Sound.play("mouseClick");
         pause = false;
@@ -268,7 +218,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         oldTetros = [];
 
         pieceBag = [];
-        grid = null;
+        grid.reset();
         stage.removeChild(txtGameOver);
         stage.removeChild(scoreText);
         stage.removeChild(levelText);
