@@ -13,7 +13,8 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid, gridBackgro
     var gridSpriteX = gridBackgroundSpriteX;
     var gridSpriteY = gridBackgroundSpriteY;
 
-    var ticksPerMove = 24;
+    const BASE_MOVE_SPEED = 24;
+    var ticksPerMove = BASE_MOVE_SPEED;
     // Current co-ordinates of the (0,0) block's sprite on the screen
     var screenX, screenY; // set to startx and starty in reset me
 
@@ -397,10 +398,10 @@ var Tetrominoe = function (stage, assetManager, tetroType, gameGrid, gridBackgro
     };
 
     this.setSpeed = function (speed) {
-        if(ticksPerMove === 0) {
+        ticksPerMove = BASE_MOVE_SPEED - speed;
+
+        if(ticksPerMove <= 0) {
             ticksPerMove = 1;
-        } else {
-            ticksPerMove = ticksPerMove - speed;
         }
     };
     this.resetMe();

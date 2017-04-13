@@ -88,7 +88,9 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
         var selected = pieceBag.splice(Math.floor(Math.random() * pieceBag.length), 1)[0];
 
         // create a tetro from it and return it.
-        return new Tetrominoe(stage, assetManager, selected, grid, gridBackground.x, gridBackground.y);
+        var tetro = new Tetrominoe(stage, assetManager, selected, grid, gridBackground.x, gridBackground.y);
+        tetro.setSpeed(speed);
+        return tetro;
     }
     
     function checkGrid() {
@@ -112,7 +114,7 @@ var GameScreen = function (assetManager, stage, myIntroScreen) {
             if(rowsRemaining === 0){
                 level++;
                 rowsRemaining = 10;
-                speed++;
+                speed += 2;
                 tetro.setSpeed(speed);
             }
             
